@@ -95,7 +95,7 @@ public class ControllerImplementation implements IController, ActionListener {
             handleInsertAction();
         } else if (insert != null && e.getSource() == insert.getInsert()) {
             handleInsertPerson();
-            JOptionPane.showMessageDialog(menu, "Person inserted successfully! ", "", 1);
+            
         } else if (e.getSource() == menu.getRead()) {
             handleReadAction();
         } else if (read != null && e.getSource() == read.getRead()) {
@@ -392,6 +392,7 @@ public class ControllerImplementation implements IController, ActionListener {
         try {
             if (dao.read(p) == null) {
                 dao.insert(p);
+                JOptionPane.showMessageDialog(menu, "Person inserted successfully! ", "", 1);
             } else {
                 throw new PersonException(p.getNif() + " is registered and can not "
                         + "be INSERTED.");
