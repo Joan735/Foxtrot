@@ -96,7 +96,6 @@ public class ControllerImplementation implements IController, ActionListener {
         } else if (insert != null && e.getSource() == insert.getInsert()) {
             handleInsertPerson();
             JOptionPane.showMessageDialog(menu, "Person inserted successfully! ", "", 1);
-
         } else if (e.getSource() == menu.getRead()) {
             handleReadAction();
         } else if (read != null && e.getSource() == read.getRead()) {
@@ -276,9 +275,14 @@ public class ControllerImplementation implements IController, ActionListener {
 
     public void handleDeletePerson() {
         if (delete != null) {
-            Person p = new Person(delete.getNif().getText());
-            delete(p);
-            delete.getReset().doClick();
+            int boleano = JOptionPane.showConfirmDialog(menu, "You sure you want to delete this person?", "", 2);
+            if (boleano == 0) {
+                Person p = new Person(delete.getNif().getText());
+                delete(p);
+                JOptionPane.showMessageDialog(menu, "Person deleted", "", 1);
+                delete.getReset().doClick();
+            } 
+
         }
     }
 
@@ -361,21 +365,21 @@ public class ControllerImplementation implements IController, ActionListener {
         Object[] options = {"Yes", "No"};
         //int answer = JOptionPane.showConfirmDialog(menu, "Are you sure to delete all people registered?", "Delete All - People v1.1.0", 0, 0);
         int answer = JOptionPane.showOptionDialog(
-        menu,
-        "Are you sure you want to delete all registered people?", 
-        "Delete All - People v1.1.0",
-        JOptionPane.YES_NO_OPTION,
-        JOptionPane.WARNING_MESSAGE,
-        null,
-        options,
-        options[1] // Default selection is "No"
-    );
+                menu,
+                "Are you sure you want to delete all registered people?",
+                "Delete All - People v1.1.0",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE,
+                null,
+                options,
+                options[1] // Default selection is "No"
+        );
 
         if (answer == 0) {
             deleteAll();
         }
     }
-    
+
     /**
      * This function inserts the Person object with the requested NIF, if it
      * doesn't exist. If there is any access problem with the storage device,
