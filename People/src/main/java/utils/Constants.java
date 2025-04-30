@@ -16,7 +16,4 @@ public class Constants {
     public static final String serialization = "File (Serialization):";
     public static final String SQL = "SQL - Database";
     public static final String JPA = "JPA - Database";
-    
-
-
 }
