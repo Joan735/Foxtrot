@@ -35,9 +35,11 @@ import javax.persistence.*;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import org.jdatepicker.DateModel;
 import utils.Constants;
+import view.Count;
 
 /**
  * This class starts the visual part of the application and programs and manages
@@ -59,6 +61,7 @@ public class ControllerImplementation implements IController, ActionListener {
     private Delete delete;
     private Update update;
     private ReadAll readAll;
+    private Count count;
 
     /**
      * This constructor allows the controller to know which data storage option
@@ -95,7 +98,6 @@ public class ControllerImplementation implements IController, ActionListener {
             handleInsertAction();
         } else if (insert != null && e.getSource() == insert.getInsert()) {
             handleInsertPerson();
-            
         } else if (e.getSource() == menu.getRead()) {
             handleReadAction();
         } else if (read != null && e.getSource() == read.getRead()) {
@@ -114,6 +116,8 @@ public class ControllerImplementation implements IController, ActionListener {
             handleReadAll();
         } else if (e.getSource() == menu.getDeleteAll()) {
             handleDeleteAll();
+        } else if (e.getSource() == menu.getCount()) {
+            handleCount();
         }
     }
 
@@ -219,6 +223,7 @@ public class ControllerImplementation implements IController, ActionListener {
         menu.getDelete().addActionListener(this);
         menu.getReadAll().addActionListener(this);
         menu.getDeleteAll().addActionListener(this);
+        menu.getCount().addActionListener(this);
     }
 
     private void handleInsertAction() {
@@ -281,8 +286,7 @@ public class ControllerImplementation implements IController, ActionListener {
                 delete(p);
                 JOptionPane.showMessageDialog(menu, "Person deleted", "", 1);
                 delete.getReset().doClick();
-            } 
-
+            }
         }
     }
 
@@ -377,6 +381,18 @@ public class ControllerImplementation implements IController, ActionListener {
 
         if (answer == 0) {
             deleteAll();
+        }
+    }
+
+    public void handleCount() {
+        int number = count();
+        if (number == 0) {
+            JOptionPane.showMessageDialog(menu, "There are not people registered yet.", "Count - People v1.1.0", JOptionPane.WARNING_MESSAGE);
+        } else {
+            count = new Count(menu, true);
+            JTextField counter = (JTextField) count.getjTxtCount();
+            counter.setText(String.valueOf(number));
+            count.setVisible(true);
         }
     }
 
@@ -534,6 +550,23 @@ public class ControllerImplementation implements IController, ActionListener {
                 System.exit(0);
             }
         }
+    }
+
+    @Override
+    public int count() {
+        ArrayList<Person> people = new ArrayList<>();
+        try {
+            people = dao.readAll();
+        } catch (Exception ex) {
+            if (ex instanceof FileNotFoundException || ex instanceof IOException
+                    || ex instanceof ParseException || ex instanceof ClassNotFoundException
+                    || ex instanceof SQLException || ex instanceof PersistenceException) {
+                JOptionPane.showMessageDialog(readAll, ex.getMessage() + " Closing application.", readAll.getTitle(), JOptionPane.ERROR_MESSAGE);
+                System.exit(0);
+            }
+        }
+        int number = people.size();
+        return number;
     }
 
 }
