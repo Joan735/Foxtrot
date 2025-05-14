@@ -13,6 +13,10 @@ public class DataValidation {
     public static boolean isNumber(char c) {
         return (48 <= c && c <= 57);
     }
+    
+    public static boolean isPhoneNumber(char c) {
+        return (c == 43 || 48 <= c && c <= 57);
+    }
 
     public static boolean isLetter(char c) {
         //The name can contain uppercase and lowercase letters, whitespace, 

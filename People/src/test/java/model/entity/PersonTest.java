@@ -13,34 +13,38 @@ class PersonTest {
     private Person personWithFullData;
     private String nif = "12345678X";
     private String name = "John Doe";
+    private String phoneNumber = "612352892";
     private Date dateOfBirth = new Date();
     private ImageIcon photo = new ImageIcon();
 
     @BeforeEach
     void setUp() {
         person = new Person(nif);
-        personWithFullData = new Person(name, nif, dateOfBirth, photo);
+        personWithFullData = new Person(name, nif, phoneNumber, dateOfBirth, photo);
     }
 
     @Test
     void testConstructorNifOnly() {
         assertEquals(nif, person.getNif());
         assertNull(person.getName());
+        assertNull(person.getPhoneNumber());
         assertNull(person.getDateOfBirth());
         assertNull(person.getPhoto());
     }
 
     @Test
     void testConstructorNameAndNif() {
-        Person personWithNameAndNif = new Person(name, nif);
-        assertEquals(name, personWithNameAndNif.getName());
-        assertEquals(nif, personWithNameAndNif.getNif());
+        Person personWithNameAndNifAndPhoneNumber = new Person(name, nif, phoneNumber);
+        assertEquals(name, personWithNameAndNifAndPhoneNumber.getName());
+        assertEquals(nif, personWithNameAndNifAndPhoneNumber.getNif());
+        assertEquals(phoneNumber, personWithNameAndNifAndPhoneNumber.getPhoneNumber());
     }
 
     @Test
     void testConstructorFullData() {
         assertEquals(name, personWithFullData.getName());
         assertEquals(nif, personWithFullData.getNif());
+        assertEquals(phoneNumber, personWithFullData.getPhoneNumber());
         assertEquals(dateOfBirth, personWithFullData.getDateOfBirth());
         assertEquals(photo, personWithFullData.getPhoto());
     }
@@ -49,7 +53,10 @@ class PersonTest {
     void testGettersAndSetters() {
         person.setName("Jane Doe");
         assertEquals("Jane Doe", person.getName());
-
+        
+        person.setPhoneNumber("612352892");
+        assertEquals("612352892", person.getPhoneNumber());
+        
         Date newDateOfBirth = new Date(0);
         person.setDateOfBirth(newDateOfBirth);
         assertEquals(newDateOfBirth, person.getDateOfBirth());
