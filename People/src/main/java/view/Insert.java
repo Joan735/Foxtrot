@@ -468,8 +468,10 @@ public class Insert extends javax.swing.JDialog {
     }//GEN-LAST:event_phoneNumberKeyReleased
 
     private void phoneNumberKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_phoneNumberKeyTyped
-        if (!isPhoneNumber(evt.getKeyChar()) && evt.getKeyChar() != KeyEvent.VK_BACK_SPACE && evt.getKeyChar() != KeyEvent.VK_DELETE
-                && evt.getKeyChar() != KeyEvent.VK_SPACE && evt.getKeyChar() != KeyEvent.VK_PERIOD && evt.getKeyChar() != KeyEvent.VK_MINUS) {
+        if (!isPhoneNumber(evt.getKeyChar()) && evt.getKeyChar() != KeyEvent.VK_BACK_SPACE 
+                && evt.getKeyChar() != KeyEvent.VK_DELETE && evt.getKeyChar() != KeyEvent.VK_ENTER
+                && evt.getKeyChar() != KeyEvent.VK_CAPS_LOCK && evt.getKeyChar() != KeyEvent.VK_SPACE 
+                && evt.getKeyChar() != KeyEvent.VK_PERIOD && evt.getKeyChar() != KeyEvent.VK_MINUS) {
             JOptionPane.showMessageDialog(this, "Type only numbers and + (E.g., +34 612 475 289)", this.getTitle(), JOptionPane.WARNING_MESSAGE);
             evt.consume();
         }
