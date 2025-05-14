@@ -18,6 +18,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import org.jdatepicker.DateModel;
 import org.jdatepicker.JDatePicker;
+import utils.DataValidation;
+import static utils.DataValidation.isPhoneNumber;
 
 /**
  * Interface used to updated a person. It is mandatory to enter the NIF.
@@ -70,6 +72,10 @@ public class Update extends javax.swing.JDialog {
         return reset;
     }
 
+    public JTextField getPhoneNumber() {
+        return phoneNumber;
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -91,6 +97,8 @@ public class Update extends javax.swing.JDialog {
         reset = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         read = new javax.swing.JButton();
+        phoneNumber = new javax.swing.JTextField();
+        jLblphoneNumber = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Update - People v1.1.0");
@@ -104,7 +112,7 @@ public class Update extends javax.swing.JDialog {
         update.setPreferredSize(new java.awt.Dimension(194, 33));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(12, 12, 12, 12);
@@ -222,7 +230,7 @@ public class Update extends javax.swing.JDialog {
         jLabel8.setPreferredSize(new java.awt.Dimension(150, 22));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(12, 12, 12, 12);
@@ -234,7 +242,7 @@ public class Update extends javax.swing.JDialog {
         dateOfBirth.setPreferredSize(new java.awt.Dimension(350, 22));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
@@ -253,7 +261,7 @@ public class Update extends javax.swing.JDialog {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(12, 12, 12, 24);
@@ -264,7 +272,7 @@ public class Update extends javax.swing.JDialog {
         jLabel2.setText("Author: francesc.perez@stucom.com - Version 1.1.0");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
@@ -274,10 +282,44 @@ public class Update extends javax.swing.JDialog {
         read.setText("readnoVisible");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(6, 6, 6, 12);
         getContentPane().add(read, gridBagConstraints);
+
+        phoneNumber.setEnabled(false);
+        phoneNumber.setMaximumSize(new java.awt.Dimension(400, 22));
+        phoneNumber.setMinimumSize(new java.awt.Dimension(400, 22));
+        phoneNumber.setPreferredSize(new java.awt.Dimension(400, 22));
+        phoneNumber.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                phoneNumberKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                phoneNumberKeyReleased(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(12, 12, 12, 24);
+        getContentPane().add(phoneNumber, gridBagConstraints);
+
+        jLblphoneNumber.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLblphoneNumber.setText("Phone Number");
+        jLblphoneNumber.setMaximumSize(new java.awt.Dimension(100, 22));
+        jLblphoneNumber.setMinimumSize(new java.awt.Dimension(100, 22));
+        jLblphoneNumber.setPreferredSize(new java.awt.Dimension(100, 22));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(12, 12, 12, 12);
+        getContentPane().add(jLblphoneNumber, gridBagConstraints);
 
         pack();
         setLocationRelativeTo(null);
@@ -312,6 +354,7 @@ public class Update extends javax.swing.JDialog {
         nif.setText(PLACEHOLDER_NIF);
         nif.setForeground(Color.gray);
         name.setText("");
+        phoneNumber.setText("");
         dateOfBirth.getModel().setValue(null);
         photo.setIcon(null);
         name.setEnabled(false);
@@ -335,8 +378,9 @@ public class Update extends javax.swing.JDialog {
         if (!isLetter(evt.getKeyChar()) && evt.getKeyCode() != KeyEvent.VK_UP
                 && evt.getKeyCode() != KeyEvent.VK_DOWN && evt.getKeyCode() != KeyEvent.VK_LEFT
                 && evt.getKeyCode() != KeyEvent.VK_RIGHT && evt.getKeyCode() != KeyEvent.VK_SHIFT
-                && evt.getKeyCode() != KeyEvent.VK_BACK_SPACE && evt.getKeyCode() != KeyEvent.VK_DELETE) {
-            JOptionPane.showMessageDialog(this, "Type only uppercase or lowercase letters, hyphens, and whitespace.", "UPdate - People v1.0", JOptionPane.WARNING_MESSAGE);
+                && evt.getKeyCode() != KeyEvent.VK_BACK_SPACE && evt.getKeyCode() != KeyEvent.VK_DELETE
+                && evt.getKeyCode() != KeyEvent.VK_CAPS_LOCK && evt.getKeyCode() != KeyEvent.VK_ENTER) {
+            JOptionPane.showMessageDialog(this, "Type only uppercase or lowercase letters, hyphens, and whitespace.", this.getTitle(), JOptionPane.WARNING_MESSAGE);
             int posDelete = name.getText().indexOf(evt.getKeyChar());
             StringBuilder newName = new StringBuilder(name.getText());
             name.setText(newName.deleteCharAt(posDelete).toString());
@@ -373,6 +417,28 @@ public class Update extends javax.swing.JDialog {
         nif.setFocusable(true);
     }//GEN-LAST:event_nifMouseEntered
 
+    private void phoneNumberKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_phoneNumberKeyPressed
+        if (!isPhoneNumber(evt.getKeyChar()) && evt.getKeyCode() != KeyEvent.VK_UP
+                && evt.getKeyCode() != KeyEvent.VK_DOWN && evt.getKeyCode() != KeyEvent.VK_LEFT
+                && evt.getKeyCode() != KeyEvent.VK_RIGHT && evt.getKeyCode() != KeyEvent.VK_SHIFT
+                && evt.getKeyCode() != KeyEvent.VK_BACK_SPACE && evt.getKeyCode() != KeyEvent.VK_DELETE
+                && evt.getKeyCode() != KeyEvent.VK_CAPS_LOCK && evt.getKeyCode() != KeyEvent.VK_ENTER) {
+            JOptionPane.showMessageDialog(this, "Type only numbers and + (E.g., +34 612 475 289)", this.getTitle(), JOptionPane.WARNING_MESSAGE);
+            int posDelete = phoneNumber.getText().indexOf(evt.getKeyChar());
+            StringBuilder newPhoneNumber = new StringBuilder(phoneNumber.getText());
+            phoneNumber.setText(newPhoneNumber.deleteCharAt(posDelete).toString());
+            evt.consume();
+        }
+    }//GEN-LAST:event_phoneNumberKeyPressed
+
+    private void phoneNumberKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_phoneNumberKeyReleased
+        // Mark
+        if (phoneNumber.getText().length() == 0) {
+            update.setEnabled(false);
+        } else if (!nif.getText().isEmpty()) {
+            update.setEnabled(true);
+        }    }//GEN-LAST:event_phoneNumberKeyReleased
+
     /**
      * @param args the command line arguments
      */
@@ -383,8 +449,10 @@ public class Update extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLblphoneNumber;
     private javax.swing.JTextField name;
     private javax.swing.JTextField nif;
+    private javax.swing.JTextField phoneNumber;
     private javax.swing.JLabel photo;
     private javax.swing.JButton read;
     private javax.swing.JButton reset;

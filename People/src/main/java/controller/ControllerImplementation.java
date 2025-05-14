@@ -31,6 +31,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.persistence.*;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -189,6 +191,7 @@ public class ControllerImplementation implements IController, ActionListener {
                 stmt.executeUpdate("create table if not exists " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + "("
                         + "nif varchar(9) primary key not null, "
                         + "name varchar(50), "
+                        + "phoneNumber varchar(25),"
                         + "dateOfBirth DATE, "
                         + "photo varchar(200) );");
                 stmt.close();
@@ -233,7 +236,16 @@ public class ControllerImplementation implements IController, ActionListener {
     }
 
     private void handleInsertPerson() {
-        Person p = new Person(insert.getNam().getText(), insert.getNif().getText());
+        Person p = new Person(insert.getNam().getText(), insert.getNif().getText(), insert.getPhoneNumber().getText());
+
+        String phoneRegex = "^\\+?[0-9]{1,4}?[-.\\s]?(\\d{1,3})?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$";
+        Pattern pattern = Pattern.compile(phoneRegex);
+        Matcher matcher = pattern.matcher(insert.getPhoneNumber().getText());
+        if (!matcher.matches()) {
+            JOptionPane.showMessageDialog(insert, "Incorrect format for phone number (E.g., +34 612 475 289)", insert.getTitle(), JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
         if (insert.getDateOfBirth().getModel().getValue() != null) {
             p.setDateOfBirth(((GregorianCalendar) insert.getDateOfBirth().getModel().getValue()).getTime());
         }
@@ -255,6 +267,7 @@ public class ControllerImplementation implements IController, ActionListener {
         Person pNew = read(p);
         if (pNew != null) {
             read.getNam().setText(pNew.getName());
+            read.getPhoneNumber().setText(pNew.getPhoneNumber());
             if (pNew.getDateOfBirth() != null) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(pNew.getDateOfBirth());
@@ -303,10 +316,12 @@ public class ControllerImplementation implements IController, ActionListener {
             Person pNew = read(p);
             if (pNew != null) {
                 update.getNam().setEnabled(true);
+                update.getPhoneNumber().setEnabled(true);
                 update.getDateOfBirth().setEnabled(true);
                 update.getPhoto().setEnabled(true);
                 update.getUpdate().setEnabled(true);
                 update.getNam().setText(pNew.getName());
+                update.getPhoneNumber().setText(pNew.getPhoneNumber());
                 if (pNew.getDateOfBirth() != null) {
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(pNew.getDateOfBirth());
@@ -327,7 +342,16 @@ public class ControllerImplementation implements IController, ActionListener {
 
     public void handleUpdatePerson() {
         if (update != null) {
-            Person p = new Person(update.getNam().getText(), update.getNif().getText());
+            Person p = new Person(update.getNam().getText(), update.getNif().getText(), update.getPhoneNumber().getText());
+
+            String phoneRegex = "^\\+?[0-9]{1,4}?[-.\\s]?(\\d{1,3})?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$";
+            Pattern pattern = Pattern.compile(phoneRegex);
+            Matcher matcher = pattern.matcher(insert.getPhoneNumber().getText());
+            if (!matcher.matches()) {
+                JOptionPane.showMessageDialog(insert, "Incorrect format for phone number (E.g., +34 612 475 289)", insert.getTitle(), JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
             if ((update.getDateOfBirth().getModel().getValue()) != null) {
                 p.setDateOfBirth(((GregorianCalendar) update.getDateOfBirth().getModel().getValue()).getTime());
             }
@@ -350,15 +374,16 @@ public class ControllerImplementation implements IController, ActionListener {
                 model.addRow(new Object[i]);
                 model.setValueAt(s.get(i).getNif(), i, 0);
                 model.setValueAt(s.get(i).getName(), i, 1);
+                model.setValueAt(s.get(i).getPhoneNumber(), i, 2);
                 if (s.get(i).getDateOfBirth() != null) {
-                    model.setValueAt(s.get(i).getDateOfBirth().toString(), i, 2);
+                    model.setValueAt(s.get(i).getDateOfBirth().toString(), i, 3);
                 } else {
-                    model.setValueAt("", i, 2);
+                    model.setValueAt("", i, 3);
                 }
                 if (s.get(i).getPhoto() != null) {
-                    model.setValueAt("yes", i, 3);
+                    model.setValueAt("yes", i, 4);
                 } else {
-                    model.setValueAt("no", i, 3);
+                    model.setValueAt("no", i, 4);
                 }
             }
             readAll.setVisible(true);
@@ -439,7 +464,7 @@ public class ControllerImplementation implements IController, ActionListener {
     public void update(Person p) {
         try {
             dao.update(p);
-            JOptionPane.showMessageDialog(menu, "Person updated successfully!", "Update completed", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(menu, "Person updated successfully!", update.getTitle(), JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception ex) {
             //Exceptions generated by file read/write access. If something goes 
             // wrong the application closes.
@@ -499,7 +524,6 @@ public class ControllerImplementation implements IController, ActionListener {
                 return pTR;
             }
         } catch (Exception ex) {
-
             //Exceptions generated by file read access. If something goes wrong 
             //reading the file, the application closes.
             if (ex instanceof FileNotFoundException || ex instanceof IOException
@@ -561,7 +585,7 @@ public class ControllerImplementation implements IController, ActionListener {
             if (ex instanceof FileNotFoundException || ex instanceof IOException
                     || ex instanceof ParseException || ex instanceof ClassNotFoundException
                     || ex instanceof SQLException || ex instanceof PersistenceException) {
-                JOptionPane.showMessageDialog(readAll, ex.getMessage() + " Closing application.", readAll.getTitle(), JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(readAll, ex.getMessage() + " Closing application.", count.getTitle(), JOptionPane.ERROR_MESSAGE);
                 System.exit(0);
             }
         }

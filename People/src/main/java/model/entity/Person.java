@@ -20,6 +20,7 @@ public class Person implements Serializable{
     @Id 
     private String nif;
     private String name;
+    private String phoneNumber;
     private Date dateOfBirth;
     @Transient
     private ImageIcon photo;
@@ -43,9 +44,10 @@ public class Person implements Serializable{
      * @author Fran Perez
      * @version 1.0
      */
-    public Person(String name, String nif) {
+    public Person(String name, String nif, String phoneNumber) {
         this.name = name;
         this.nif = nif;
+        this.phoneNumber = phoneNumber;
     }
 
     /**
@@ -54,12 +56,14 @@ public class Person implements Serializable{
      * @version 1.0
      * @param name
      * @param nif
+     * @param phoneNumber
      * @param dateOfBirth
      * @param photo
      */
-    public Person(String name, String nif, Date dateOfBirth, ImageIcon photo) {
-        this.name = name;      
+    public Person(String name, String nif, String phoneNumber, Date dateOfBirth, ImageIcon photo) {
+        this.name = name;
         this.nif = nif;
+        this.phoneNumber = phoneNumber;
         this.dateOfBirth = dateOfBirth;
         this.photo = photo;
     }
@@ -103,6 +107,14 @@ public class Person implements Serializable{
 
     public void setPhotoOnlyJPA(byte[] photoOnlyJPA) {
         this.photoOnlyJPA = photoOnlyJPA;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
         
     /**

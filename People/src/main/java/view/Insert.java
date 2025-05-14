@@ -12,12 +12,16 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import org.jdatepicker.DateModel;
 import org.jdatepicker.JDatePicker;
+import utils.DataValidation;
+import static utils.DataValidation.isPhoneNumber;
 
 /**
  * Interface used to register a person. It is mandatory to enter at least the
@@ -30,6 +34,7 @@ public class Insert extends javax.swing.JDialog {
 
     private final String PLACEHOLDER_NIF = "Enter NIF number, letter is calculated (e.g., 12345678)";
     private final String PLACEHOLDER_NAME = "Enter full name";
+    private final String PLACEHOLDER_PHONE_NUMBER = "Enter phone number (e.g., +34 612 475 289)";
 
     public Insert(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -41,8 +46,11 @@ public class Insert extends javax.swing.JDialog {
         nif.setText(PLACEHOLDER_NIF);
         name.setForeground(Color.gray);
         name.setText(PLACEHOLDER_NAME);
+        phoneNumber.setForeground(Color.gray);
+        phoneNumber.setText(PLACEHOLDER_PHONE_NUMBER);
         nif.setFocusable(false);
         name.setFocusable(false);
+        phoneNumber.setFocusable(false);
     }
 
     public JButton getReset() {
@@ -69,6 +77,10 @@ public class Insert extends javax.swing.JDialog {
         return photo;
     }
 
+    public JTextField getPhoneNumber() {
+        return phoneNumber;
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -89,6 +101,8 @@ public class Insert extends javax.swing.JDialog {
         jLabel8 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         dateOfBirth = new org.jdatepicker.JDatePicker();
+        jLblphoneNumber = new javax.swing.JLabel();
+        phoneNumber = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Insert - People v1.1.0");
@@ -102,7 +116,7 @@ public class Insert extends javax.swing.JDialog {
         insert.setPreferredSize(new java.awt.Dimension(187, 33));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(12, 12, 12, 12);
@@ -167,7 +181,7 @@ public class Insert extends javax.swing.JDialog {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
         gridBagConstraints.insets = new java.awt.Insets(12, 12, 12, 24);
@@ -251,7 +265,7 @@ public class Insert extends javax.swing.JDialog {
         jLabel8.setPreferredSize(new java.awt.Dimension(150, 22));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(12, 12, 12, 12);
@@ -263,7 +277,7 @@ public class Insert extends javax.swing.JDialog {
         jLabel2.setRequestFocusEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(12, 24, 12, 24);
@@ -274,18 +288,64 @@ public class Insert extends javax.swing.JDialog {
         dateOfBirth.setPreferredSize(new java.awt.Dimension(350, 22));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(12, 12, 12, 24);
         getContentPane().add(dateOfBirth, gridBagConstraints);
+
+        jLblphoneNumber.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLblphoneNumber.setText("Phone Number");
+        jLblphoneNumber.setMaximumSize(new java.awt.Dimension(100, 22));
+        jLblphoneNumber.setMinimumSize(new java.awt.Dimension(100, 22));
+        jLblphoneNumber.setPreferredSize(new java.awt.Dimension(100, 22));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(12, 12, 12, 12);
+        getContentPane().add(jLblphoneNumber, gridBagConstraints);
+
+        phoneNumber.setMaximumSize(new java.awt.Dimension(400, 22));
+        phoneNumber.setMinimumSize(new java.awt.Dimension(400, 22));
+        phoneNumber.setPreferredSize(new java.awt.Dimension(400, 22));
+        phoneNumber.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                phoneNumberFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                phoneNumberFocusLost(evt);
+            }
+        });
+        phoneNumber.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                phoneNumberMouseEntered(evt);
+            }
+        });
+        phoneNumber.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                phoneNumberKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                phoneNumberKeyTyped(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(12, 12, 12, 24);
+        getContentPane().add(phoneNumber, gridBagConstraints);
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void showInsert() {
-        if (!name.getText().isEmpty() && !nif.isEditable()) {
+        if (!name.getText().isEmpty() && !phoneNumber.getText().isEmpty() && !nif.isEditable()) {
             insert.setEnabled(true);
         } else {
             insert.setEnabled(false);
@@ -298,6 +358,8 @@ public class Insert extends javax.swing.JDialog {
         nif.setForeground(Color.gray);
         name.setText(PLACEHOLDER_NAME);
         name.setForeground(Color.gray);
+        phoneNumber.setText(PLACEHOLDER_PHONE_NUMBER);
+        phoneNumber.setForeground(Color.gray);
         photo.setIcon(null);
         //We reset the calendar date to the current date ...
         LocalDate dateLocate = LocalDate.now();
@@ -371,7 +433,7 @@ public class Insert extends javax.swing.JDialog {
     private void nifFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_nifFocusLost
         if (nif.getText().equals("")) {
             nif.setForeground(Color.gray);
-            nif.setText("Enter NIF number, letter is calculated (e.g., 12345678)");
+            nif.setText(PLACEHOLDER_NIF);
         }
     }//GEN-LAST:event_nifFocusLost
 
@@ -390,6 +452,36 @@ public class Insert extends javax.swing.JDialog {
         nif.setFocusable(true);
     }//GEN-LAST:event_nifMouseEntered
 
+    private void phoneNumberFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_phoneNumberFocusGained
+        if (phoneNumber.getText().equals(PLACEHOLDER_PHONE_NUMBER)) {
+            phoneNumber.setText("");
+            phoneNumber.setForeground(Color.black);
+        }
+    }//GEN-LAST:event_phoneNumberFocusGained
+
+    private void phoneNumberMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_phoneNumberMouseEntered
+        phoneNumber.setFocusable(true);
+    }//GEN-LAST:event_phoneNumberMouseEntered
+
+    private void phoneNumberKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_phoneNumberKeyReleased
+        showInsert();
+    }//GEN-LAST:event_phoneNumberKeyReleased
+
+    private void phoneNumberKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_phoneNumberKeyTyped
+        if (!isPhoneNumber(evt.getKeyChar()) && evt.getKeyChar() != KeyEvent.VK_BACK_SPACE && evt.getKeyChar() != KeyEvent.VK_DELETE
+                && evt.getKeyChar() != KeyEvent.VK_SPACE && evt.getKeyChar() != KeyEvent.VK_PERIOD && evt.getKeyChar() != KeyEvent.VK_MINUS) {
+            JOptionPane.showMessageDialog(this, "Type only numbers and + (E.g., +34 612 475 289)", this.getTitle(), JOptionPane.WARNING_MESSAGE);
+            evt.consume();
+        }
+    }//GEN-LAST:event_phoneNumberKeyTyped
+
+    private void phoneNumberFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_phoneNumberFocusLost
+        if (phoneNumber.getText().equals("")) {
+            phoneNumber.setForeground(Color.gray);
+            phoneNumber.setText(PLACEHOLDER_PHONE_NUMBER);
+        }
+    }//GEN-LAST:event_phoneNumberFocusLost
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.jdatepicker.JDatePicker dateOfBirth;
     private javax.swing.JButton insert;
@@ -397,8 +489,10 @@ public class Insert extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLblphoneNumber;
     private javax.swing.JTextField name;
     private javax.swing.JTextField nif;
+    private javax.swing.JTextField phoneNumber;
     private javax.swing.JLabel photo;
     private javax.swing.JButton reset;
     // End of variables declaration//GEN-END:variables
