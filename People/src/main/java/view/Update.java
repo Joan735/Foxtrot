@@ -422,7 +422,10 @@ public class Update extends javax.swing.JDialog {
                 && evt.getKeyCode() != KeyEvent.VK_DOWN && evt.getKeyCode() != KeyEvent.VK_LEFT
                 && evt.getKeyCode() != KeyEvent.VK_RIGHT && evt.getKeyCode() != KeyEvent.VK_SHIFT
                 && evt.getKeyCode() != KeyEvent.VK_BACK_SPACE && evt.getKeyCode() != KeyEvent.VK_DELETE
-                && evt.getKeyCode() != KeyEvent.VK_CAPS_LOCK && evt.getKeyCode() != KeyEvent.VK_ENTER) {
+                && evt.getKeyCode() != KeyEvent.VK_CAPS_LOCK && evt.getKeyCode() != KeyEvent.VK_ENTER
+                && evt.getKeyCode() != KeyEvent.VK_ALT && evt.getKeyCode() != KeyEvent.VK_CONTROL 
+                && evt.getKeyChar() != KeyEvent.VK_PERIOD && evt.getKeyChar() != KeyEvent.VK_SPACE
+                && evt.getKeyChar() != KeyEvent.VK_MINUS ) {
             JOptionPane.showMessageDialog(this, "Type only numbers and + (E.g., +34 612 475 289)", this.getTitle(), JOptionPane.WARNING_MESSAGE);
             int posDelete = phoneNumber.getText().indexOf(evt.getKeyChar());
             StringBuilder newPhoneNumber = new StringBuilder(phoneNumber.getText());
