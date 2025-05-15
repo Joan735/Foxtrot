@@ -52,7 +52,7 @@ import view.Count;
  * @version 1.1.0
  */
 public class ControllerImplementation implements IController, ActionListener {
-
+    // Seguir aquí, usando el arraylist publico
     //Instance variables used so that both the visual and model parts can be 
     //accessed from the Controller.
     private final DataStorageSelection dSS;
@@ -64,7 +64,7 @@ public class ControllerImplementation implements IController, ActionListener {
     private Update update;
     private ReadAll readAll;
     private Count count;
-
+    public static ArrayList<Person> s;
     /**
      * This constructor allows the controller to know which data storage option
      * the user has chosen.Schedule an event to deploy when the user has made
@@ -364,7 +364,7 @@ public class ControllerImplementation implements IController, ActionListener {
     }
 
     public void handleReadAll() {
-        ArrayList<Person> s = readAll();
+        s = readAll();
         if (s.isEmpty()) {
             JOptionPane.showMessageDialog(menu, "There are not people registered yet.", "Read All - People v1.1.0", JOptionPane.WARNING_MESSAGE);
         } else {
@@ -420,7 +420,7 @@ public class ControllerImplementation implements IController, ActionListener {
             count.setVisible(true);
         }
     }
-
+    
     /**
      * This function inserts the Person object with the requested NIF, if it
      * doesn't exist. If there is any access problem with the storage device,
@@ -547,6 +547,7 @@ public class ControllerImplementation implements IController, ActionListener {
         ArrayList<Person> people = new ArrayList<>();
         try {
             people = dao.readAll();
+            
         } catch (Exception ex) {
             if (ex instanceof FileNotFoundException || ex instanceof IOException
                     || ex instanceof ParseException || ex instanceof ClassNotFoundException

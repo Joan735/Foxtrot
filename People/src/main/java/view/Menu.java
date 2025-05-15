@@ -122,6 +122,11 @@ public class Menu extends javax.swing.JFrame {
         insert.setMaximumSize(new java.awt.Dimension(120, 50));
         insert.setMinimumSize(new java.awt.Dimension(120, 50));
         insert.setPreferredSize(new java.awt.Dimension(120, 50));
+        insert.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                insertActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -159,6 +164,11 @@ public class Menu extends javax.swing.JFrame {
         deleteAll.setMaximumSize(new java.awt.Dimension(120, 50));
         deleteAll.setMinimumSize(new java.awt.Dimension(120, 50));
         deleteAll.setPreferredSize(new java.awt.Dimension(120, 50));
+        deleteAll.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteAllActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 5;
@@ -183,6 +193,14 @@ public class Menu extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void deleteAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteAllActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_deleteAllActionPerformed
+
+    private void insertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_insertActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton count;
