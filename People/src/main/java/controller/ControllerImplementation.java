@@ -20,8 +20,10 @@ import view.Update;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -31,6 +33,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.persistence.*;
@@ -42,6 +45,7 @@ import javax.swing.table.DefaultTableModel;
 import org.jdatepicker.DateModel;
 import utils.Constants;
 import view.Count;
+import view.Login;
 
 /**
  * This class starts the visual part of the application and programs and manages
@@ -52,6 +56,7 @@ import view.Count;
  * @version 1.1.0
  */
 public class ControllerImplementation implements IController, ActionListener {
+
     // Seguir aquí, usando el arraylist publico
     //Instance variables used so that both the visual and model parts can be 
     //accessed from the Controller.
@@ -64,7 +69,9 @@ public class ControllerImplementation implements IController, ActionListener {
     private Update update;
     private ReadAll readAll;
     private Count count;
+    private Login login;
     public static ArrayList<Person> s;
+
     /**
      * This constructor allows the controller to know which data storage option
      * the user has chosen.Schedule an event to deploy when the user has made
@@ -96,6 +103,8 @@ public class ControllerImplementation implements IController, ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == dSS.getAccept()[0]) {
             handleDataStorageSelection();
+        } else if (e.getSource() == login.getBtnLogin()) {
+            handleLogin();
         } else if (e.getSource() == menu.getInsert()) {
             handleInsertAction();
         } else if (insert != null && e.getSource() == insert.getInsert()) {
@@ -146,7 +155,7 @@ public class ControllerImplementation implements IController, ActionListener {
                 setupJPADatabase();
                 break;
         }
-        setupMenu();
+        handleLoginAction();
     }
 
     private void setupFileStorage() {
@@ -229,6 +238,74 @@ public class ControllerImplementation implements IController, ActionListener {
         menu.getCount().addActionListener(this);
     }
 
+    private void handleLoginAction() {
+        login = new Login(menu, true);
+        login.getBtnLogin().addActionListener(this);
+        login.setVisible(true);
+        try {
+            createFolderFile();
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(login, "File structure not created. Closing Application.", login.getTitle(), JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
+        }
+    }
+
+    private void createFolderFile() throws IOException {
+        String userDir = System.getProperty("user.dir");
+        File folderData = new File(userDir + File.separator + "folderData");
+        if (!folderData.exists()) {
+            folderData.mkdir();
+        }
+        File fileData = new File(folderData + File.separator + "fileData.txt");
+        if (!fileData.exists()) {
+            fileData.createNewFile();
+        }
+    }
+
+    private void handleLogin() {
+        if (login.getUsername().getText().equals("Enter username")) {
+            JOptionPane.showMessageDialog(login, "Enter a username.", login.getTitle(), JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        String username = login.getUsername().getText();
+        String password = login.getPassword().getText();
+        HashMap<String, String> usersData;
+        try {
+            usersData = getUserPassword();
+            if (usersData.containsKey(username)) {
+                if (password.equals(usersData.get(username))) {
+                    JOptionPane.showMessageDialog(login, "Login successful.", login.getTitle(), JOptionPane.INFORMATION_MESSAGE);
+                    login.setVisible(false);
+                    setupMenu();
+                } else {
+                    JOptionPane.showMessageDialog(login, "Incorrect password.", login.getTitle(), JOptionPane.WARNING_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(login, "User not found.", login.getTitle(), JOptionPane.WARNING_MESSAGE);
+            }
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(login, "Error while login. Closing application.", login.getTitle(), JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
+        }
+    }
+
+    private HashMap<String, String> getUserPassword() throws IOException {
+        HashMap<String, String> usersData = new HashMap<>();
+        String userDir = System.getProperty("user.dir");
+        File fileData = new File(userDir + File.separator + "folderData" + File.separator + "fileData.txt");
+        FileReader fr = new FileReader(fileData);
+        BufferedReader br = new BufferedReader(fr);
+        String data[];
+        String line = br.readLine();
+        while (line != null) {
+            data = line.split("; ");
+            usersData.put(data[0], data[1]);
+            line = br.readLine();
+        }
+        br.close();
+        return usersData;
+    }
+
     private void handleInsertAction() {
         insert = new Insert(menu, true);
         insert.getInsert().addActionListener(this);
@@ -236,6 +313,10 @@ public class ControllerImplementation implements IController, ActionListener {
     }
 
     private void handleInsertPerson() {
+        if (insert.getNam().getText().equals("Enter full name")) {
+            JOptionPane.showMessageDialog(login, "Enter a full name.", login.getTitle(), JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         Person p = new Person(insert.getNam().getText(), insert.getNif().getText(), insert.getPhoneNumber().getText());
 
         String phoneRegex = "^\\+?[0-9]{1,4}?[-.\\s]?(\\d{1,3})?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$";
@@ -419,7 +500,7 @@ public class ControllerImplementation implements IController, ActionListener {
             count.setVisible(true);
         }
     }
-    
+
     /**
      * This function inserts the Person object with the requested NIF, if it
      * doesn't exist. If there is any access problem with the storage device,
@@ -547,7 +628,7 @@ public class ControllerImplementation implements IController, ActionListener {
         ArrayList<Person> people = new ArrayList<>();
         try {
             people = dao.readAll();
-            
+
         } catch (Exception ex) {
             if (ex instanceof FileNotFoundException || ex instanceof IOException
                     || ex instanceof ParseException || ex instanceof ClassNotFoundException
