@@ -201,6 +201,7 @@ public class ControllerImplementation implements IController, ActionListener {
                         + "nif varchar(9) primary key not null, "
                         + "name varchar(50), "
                         + "phoneNumber varchar(25),"
+                        + "postalCode varchar(25),"
                         + "dateOfBirth DATE, "
                         + "photo varchar(200) );");
                 stmt.close();
@@ -318,6 +319,7 @@ public class ControllerImplementation implements IController, ActionListener {
             return;
         }
         Person p = new Person(insert.getNam().getText(), insert.getNif().getText(), insert.getPhoneNumber().getText());
+        Person p = new Person(insert.getNam().getText(), insert.getNif().getText(), insert.getPhoneNumber().getText(), insert.getPostalCode().getText());
 
         String phoneRegex = "^\\+?[0-9]{1,4}?[-.\\s]?(\\d{1,3})?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$";
         Pattern pattern = Pattern.compile(phoneRegex);
@@ -326,7 +328,13 @@ public class ControllerImplementation implements IController, ActionListener {
             JOptionPane.showMessageDialog(insert, "Incorrect format for phone number (E.g., +34 612 475 289)", insert.getTitle(), JOptionPane.WARNING_MESSAGE);
             return;
         }
-
+        String postalCodeRegex = "^(\\d{5})(?:[-\\s]?\\d{4})?$";
+        Pattern patternPostal = Pattern.compile(postalCodeRegex);
+        Matcher matcherPostal = patternPostal.matcher(insert.getPostalCode().getText());
+        if (!matcherPostal.matches()) {
+            JOptionPane.showMessageDialog(insert, "Incorrect format for postal code (e.g., 08002)", insert.getTitle(), JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         if (insert.getDateOfBirth().getModel().getValue() != null) {
             p.setDateOfBirth(((GregorianCalendar) insert.getDateOfBirth().getModel().getValue()).getTime());
         }
@@ -341,6 +349,8 @@ public class ControllerImplementation implements IController, ActionListener {
         read = new Read(menu, true);
         read.getRead().addActionListener(this);
         read.setVisible(true);
+        read.getPostalCode().setEnabled(false);
+
     }
 
     private void handleReadPerson() {
@@ -349,6 +359,7 @@ public class ControllerImplementation implements IController, ActionListener {
         if (pNew != null) {
             read.getNam().setText(pNew.getName());
             read.getPhoneNumber().setText(pNew.getPhoneNumber());
+            read.getPostalCode().setText(pNew.getPostalCode());
             if (pNew.getDateOfBirth() != null) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(pNew.getDateOfBirth());
@@ -397,11 +408,13 @@ public class ControllerImplementation implements IController, ActionListener {
             if (pNew != null) {
                 update.getNam().setEnabled(true);
                 update.getPhoneNumber().setEnabled(true);
+                update.getPostalCode().setEnabled(true);
                 update.getDateOfBirth().setEnabled(true);
                 update.getPhoto().setEnabled(true);
                 update.getUpdate().setEnabled(true);
                 update.getNam().setText(pNew.getName());
                 update.getPhoneNumber().setText(pNew.getPhoneNumber());
+                update.getPostalCode().setText(pNew.getPostalCode());
                 if (pNew.getDateOfBirth() != null) {
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(pNew.getDateOfBirth());
@@ -422,13 +435,20 @@ public class ControllerImplementation implements IController, ActionListener {
 
     public void handleUpdatePerson() {
         if (update != null) {
-            Person p = new Person(update.getNam().getText(), update.getNif().getText(), update.getPhoneNumber().getText());
+            Person p = new Person(update.getNam().getText(), update.getNif().getText(), update.getPhoneNumber().getText(), update.getPostalCode().getText());
 
             String phoneRegex = "^\\+?[0-9]{1,4}?[-.\\s]?(\\d{1,3})?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$";
-            Pattern pattern = Pattern.compile(phoneRegex);
-            Matcher matcher = pattern.matcher(update.getPhoneNumber().getText());
-            if (!matcher.matches()) {
+            Pattern patternPhone = Pattern.compile(phoneRegex);
+            Matcher matcherPhone = patternPhone.matcher(update.getPhoneNumber().getText());
+            if (!matcherPhone.matches()) {
                 JOptionPane.showMessageDialog(update, "Incorrect format for phone number (E.g., +34 612 475 289)", update.getTitle(), JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            String postalCodeRegex = "^(\\d{5})(?:[-\\s]?\\d{4})?$";
+            Pattern patternPostal = Pattern.compile(postalCodeRegex);
+            Matcher matcherPostal = patternPostal.matcher(update.getPostalCode().getText());
+            if (!matcherPostal.matches()) {
+                JOptionPane.showMessageDialog(update, "Incorrect format for postal code (e.g., 08900)", update.getTitle(), JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
@@ -455,15 +475,16 @@ public class ControllerImplementation implements IController, ActionListener {
                 model.setValueAt(s.get(i).getNif(), i, 0);
                 model.setValueAt(s.get(i).getName(), i, 1);
                 model.setValueAt(s.get(i).getPhoneNumber(), i, 2);
+                model.setValueAt(s.get(i).getPostalCode(), i, 3);
                 if (s.get(i).getDateOfBirth() != null) {
-                    model.setValueAt(s.get(i).getDateOfBirth().toString(), i, 3);
+                    model.setValueAt(s.get(i).getDateOfBirth().toString(), i, 4);
                 } else {
-                    model.setValueAt("", i, 3);
+                    model.setValueAt("", i, 4);
                 }
                 if (s.get(i).getPhoto() != null) {
-                    model.setValueAt("yes", i, 4);
+                    model.setValueAt("yes", i, 5);
                 } else {
-                    model.setValueAt("no", i, 4);
+                    model.setValueAt("no", i, 5);
                 }
             }
             readAll.setVisible(true);
@@ -510,6 +531,7 @@ public class ControllerImplementation implements IController, ActionListener {
      */
     @Override
     public void insert(Person p) {
+        //averiguar porque el file no funciona correctamente
         try {
             if (dao.read(p) == null) {
                 dao.insert(p);
