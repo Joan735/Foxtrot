@@ -46,7 +46,7 @@
                           <Component id="name" min="-2" max="-2" attributes="0"/>
                           <Component id="phoneNumber" min="-2" max="-2" attributes="0"/>
                           <Component id="dateOfBirth" min="-2" pref="400" max="-2" attributes="0"/>
-                          <Group type="102" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
                               <Component id="postalCode" max="32767" attributes="0"/>
                               <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
                           </Group>
