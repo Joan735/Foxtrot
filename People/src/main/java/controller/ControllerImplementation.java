@@ -353,6 +353,7 @@ public class ControllerImplementation implements IController, ActionListener {
     }
 
     private void handleReadPerson() {
+        
         Person p = new Person(read.getNif().getText());
         Person pNew = read(p);
         if (pNew != null) {
