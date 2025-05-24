@@ -239,7 +239,7 @@ public class ControllerImplementation implements IController, ActionListener {
     }
 
     private void handleInsertPerson() {
-         if (insert.getNam().getText().equals("Enter full name")) {
+        if (insert.getNam().getText().equals("Enter full name")) {
             JOptionPane.showMessageDialog(login, "Enter a full name.", login.getTitle(), JOptionPane.WARNING_MESSAGE);
             return;
         }
@@ -275,7 +275,7 @@ public class ControllerImplementation implements IController, ActionListener {
         read.getRead().addActionListener(this);
         read.setVisible(true);
         read.getPostalCode().setEnabled(false);
-        
+
     }
 
     private void handleReadPerson() {
