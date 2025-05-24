@@ -239,6 +239,13 @@ public class ControllerImplementation implements IController, ActionListener {
     }
 
     private void handleInsertPerson() {
+        
+        
+        
+        
+        
+        
+        
         Person p = new Person(insert.getNam().getText(), insert.getNif().getText(), insert.getPhoneNumber().getText(), insert.getPostalCode().getText());
 
         String phoneRegex = "^\\+?[0-9]{1,4}?[-.\\s]?(\\d{1,3})?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$";
@@ -252,7 +259,7 @@ public class ControllerImplementation implements IController, ActionListener {
         Pattern patternPostal = Pattern.compile(postalCodeRegex);
         Matcher matcherPostal = patternPostal.matcher(insert.getPostalCode().getText());
         if (!matcherPostal.matches()) {
-            JOptionPane.showMessageDialog(insert, "Incorrect format for postal code (e.g., 08900)", insert.getTitle(), JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(insert, "Incorrect format for postal code (e.g., 08002)", insert.getTitle(), JOptionPane.WARNING_MESSAGE);
             return;
         }
         if (insert.getDateOfBirth().getModel().getValue() != null) {
@@ -269,6 +276,8 @@ public class ControllerImplementation implements IController, ActionListener {
         read = new Read(menu, true);
         read.getRead().addActionListener(this);
         read.setVisible(true);
+        read.getPostalCode().setEnabled(false);
+        
     }
 
     private void handleReadPerson() {
@@ -449,6 +458,7 @@ public class ControllerImplementation implements IController, ActionListener {
      */
     @Override
     public void insert(Person p) {
+        //averiguar porque el file no funciona correctamente
         try {
             if (dao.read(p) == null) {
                 dao.insert(p);
