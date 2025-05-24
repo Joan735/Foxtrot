@@ -42,6 +42,7 @@ public class Update extends javax.swing.JDialog {
         nif.setForeground(Color.gray);
         nif.setText(PLACEHOLDER_NIF);
         nif.setFocusable(false);
+        postalCode.setEnabled(false);
     }
 
     public JButton getUpdate() {
@@ -353,6 +354,7 @@ public class Update extends javax.swing.JDialog {
         dateOfBirth.getModel().setValue(null);
         dateOfBirth.setEnabled(false);
         update.setEnabled(false);
+        postalCode.setEnabled(false);
     }//GEN-LAST:event_resetActionPerformed
 
     private void nameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameKeyPressed

@@ -43,6 +43,7 @@ public class Insert extends javax.swing.JDialog {
         DropPhotoListener d = new DropPhotoListener(photo, this);
         DropTarget dropTarget = new DropTarget(photo, d);
         insert.setEnabled(false);
+        nif.setForeground(Color.black);
         nif.setText(PLACEHOLDER_NIF);
         name.setForeground(Color.gray);
         name.setText(PLACEHOLDER_NAME);
@@ -490,12 +491,16 @@ public class Insert extends javax.swing.JDialog {
     }//GEN-LAST:event_phoneNumberKeyReleased
 
     private void phoneNumberKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_phoneNumberKeyTyped
-        if (!isNumber(evt.getKeyChar()) && evt.getKeyChar() != KeyEvent.VK_BACK_SPACE && evt.getKeyChar() != KeyEvent.VK_DELETE) {
-            JOptionPane.showMessageDialog(this, "Type only numbers [0-9]", this.getTitle(), JOptionPane.ERROR_MESSAGE);
-            evt.consume();
-        }
+        if (!isPhoneNumber(evt.getKeyChar()) && evt.getKeyChar() != KeyEvent.VK_BACK_SPACE
+                && evt.getKeyChar() != KeyEvent.VK_DELETE && evt.getKeyChar() != KeyEvent.VK_ENTER
+                && evt.getKeyChar() != KeyEvent.VK_CAPS_LOCK && evt.getKeyChar() != KeyEvent.VK_SPACE
+                && evt.getKeyChar() != KeyEvent.VK_PERIOD && evt.getKeyChar() != KeyEvent.VK_MINUS) {
+            {
+                JOptionPane.showMessageDialog(this, "Type only numbers and + (E.g., ‪+34 612 475 289‬)", this.getTitle(), JOptionPane.WARNING_MESSAGE);
+                evt.consume();
     }//GEN-LAST:event_phoneNumberKeyTyped
-
+        }
+    }
     private void phoneNumberFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_phoneNumberFocusLost
         if (phoneNumber.getText().equals("")) {
             phoneNumber.setForeground(Color.gray);
@@ -522,7 +527,7 @@ public class Insert extends javax.swing.JDialog {
     }//GEN-LAST:event_postalCodeFocusLost
 
     private void postalCodeMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_postalCodeMouseEntered
-         postalCode.setFocusable(true);
+        postalCode.setFocusable(true);
     }//GEN-LAST:event_postalCodeMouseEntered
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
