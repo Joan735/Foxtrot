@@ -14,13 +14,14 @@ class PersonTest {
     private String nif = "12345678X";
     private String name = "John Doe";
     private String phoneNumber = "612352892";
+    private String postalCode= "08907";
     private Date dateOfBirth = new Date();
     private ImageIcon photo = new ImageIcon();
 
     @BeforeEach
     void setUp() {
         person = new Person(nif);
-        personWithFullData = new Person(name, nif, phoneNumber, dateOfBirth, photo);
+        personWithFullData = new Person(name, nif, phoneNumber, postalCode ,dateOfBirth, photo);
     }
 
     @Test
@@ -34,10 +35,11 @@ class PersonTest {
 
     @Test
     void testConstructorNameAndNif() {
-        Person personWithNameAndNifAndPhoneNumber = new Person(name, nif, phoneNumber);
+        Person personWithNameAndNifAndPhoneNumber = new Person(name, nif,phoneNumber,postalCode);
         assertEquals(name, personWithNameAndNifAndPhoneNumber.getName());
         assertEquals(nif, personWithNameAndNifAndPhoneNumber.getNif());
         assertEquals(phoneNumber, personWithNameAndNifAndPhoneNumber.getPhoneNumber());
+        assertEquals(postalCode, personWithNameAndNifAndPhoneNumber.getPostalCode());
     }
 
     @Test
@@ -45,6 +47,7 @@ class PersonTest {
         assertEquals(name, personWithFullData.getName());
         assertEquals(nif, personWithFullData.getNif());
         assertEquals(phoneNumber, personWithFullData.getPhoneNumber());
+        assertEquals(postalCode, personWithFullData.getPostalCode());
         assertEquals(dateOfBirth, personWithFullData.getDateOfBirth());
         assertEquals(photo, personWithFullData.getPhoto());
     }
@@ -56,6 +59,9 @@ class PersonTest {
         
         person.setPhoneNumber("612352892");
         assertEquals("612352892", person.getPhoneNumber());
+        
+        person.setPhoneNumber("67548");
+        assertEquals("675482", person.getPostalCode());
         
         Date newDateOfBirth = new Date(0);
         person.setDateOfBirth(newDateOfBirth);
