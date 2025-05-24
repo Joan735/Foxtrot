@@ -21,6 +21,7 @@ public class Person implements Serializable{
     private String nif;
     private String name;
     private String phoneNumber;
+    private String postalCode;
     private Date dateOfBirth;
     @Transient
     private ImageIcon photo;
@@ -44,10 +45,11 @@ public class Person implements Serializable{
      * @author Fran Perez
      * @version 1.0
      */
-    public Person(String name, String nif, String phoneNumber) {
+    public Person(String name, String nif, String phoneNumber, String postalCode) {
         this.name = name;
         this.nif = nif;
         this.phoneNumber = phoneNumber;
+        this.postalCode = postalCode;
     }
 
     /**
@@ -59,11 +61,14 @@ public class Person implements Serializable{
      * @param phoneNumber
      * @param dateOfBirth
      * @param photo
+     * @param postalCode
+     
      */
-    public Person(String name, String nif, String phoneNumber, Date dateOfBirth, ImageIcon photo) {
+    public Person(String name, String nif, String phoneNumber, String postalCode,Date dateOfBirth, ImageIcon photo) {
         this.name = name;
         this.nif = nif;
         this.phoneNumber = phoneNumber;
+        this.postalCode = postalCode;
         this.dateOfBirth = dateOfBirth;
         this.photo = photo;
     }
@@ -116,6 +121,17 @@ public class Person implements Serializable{
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    
+    
         
     /**
      * Function used to compare two Personas. There cannot be two or more people
@@ -150,15 +166,21 @@ public class Person implements Serializable{
         return Objects.equals(this.hashCode(), other.hashCode());
     }
 
+    @Override
+    public String toString() {
+        return name + ";" + nif + ";"+ phoneNumber +";"+ postalCode + ";"+ dateOfBirth + ";" + (photo!=null) +  "\n";
+    }
+ 
     
     /**
      * Function sed to show person's inform by console. Only for debugging 
      * pourposes.
      * @return 
      */
-    @Override
-    public String toString() {
-        return  name + ";" + nif + ";" + dateOfBirth + ";" + (photo!=null) +  "\n";
-    }
+//    @Override
+//    public String toString() {
+//        return  name + ";" + nif + ";" + dateOfBirth + ";" + (photo!=null) +  "\n";
+//    }
+    
 
 }
