@@ -239,13 +239,11 @@ public class ControllerImplementation implements IController, ActionListener {
     }
 
     private void handleInsertPerson() {
-        
-        
-        
-        
-        
-        
-        
+         if (insert.getNam().getText().equals("Enter full name")) {
+            JOptionPane.showMessageDialog(login, "Enter a full name.", login.getTitle(), JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        Person p = new Person(insert.getNam().getText(), insert.getNif().getText(), insert.getPhoneNumber().getText());
         Person p = new Person(insert.getNam().getText(), insert.getNif().getText(), insert.getPhoneNumber().getText(), insert.getPostalCode().getText());
 
         String phoneRegex = "^\\+?[0-9]{1,4}?[-.\\s]?(\\d{1,3})?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$";
