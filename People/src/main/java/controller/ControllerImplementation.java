@@ -14,7 +14,6 @@ import view.DataStorageSelection;
 import view.Delete;
 import view.Insert;
 import view.Menu;
-import view.Read;
 import view.ReadAll;
 import view.Update;
 
@@ -46,6 +45,7 @@ import org.jdatepicker.DateModel;
 import utils.Constants;
 import view.Count;
 import view.Login;
+import view.Read;
 
 /**
  * This class starts the visual part of the application and programs and manages
